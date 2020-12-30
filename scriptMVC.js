@@ -1,3 +1,4 @@
+//model
 const TABS = {
   ALL: "ALL",
   ACTIVE: "ACTIVE",
