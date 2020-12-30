@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO list</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+
+  <body>
+    <header>
+      <h1>Todo list</h1>
+    </header>
+    <main>
+
+      <section class="input-area">
+        <!-- <span class="checkAll" style="font-size:24px">&#10003;</span> -->
+        <button class="checkAll" id="checkAllButton">&#10003;</button>
+        <input class="text-input" placeholder="What needs to be done?" />
+        <button class="button" id="addButton">Add</button>
+      </section>
+
+      <section>
+        <ul class="list-container">
+
+          <!-- <li>
+            <input type="checkbox" id="checkbox">
+            <span type="hidden"class="checked" >asd</span>
+            <input type="hidden"class="listInput" placeholder="Modify the task" id="hide"/>
+            <i class="fa fa-pencil" id="pencilIcon"></i>
+            <div class="delete-icon">&#10005;</div>
+
+          </li> -->
+
+          <!-- <li>
+            <input type="checkbox" id="checkbox" />
+            <span class="checked">test</span>
+            <div class="delete-icon">&#10005;</div>
+          </li> -->
+        </ul>
+      </section>
+      <footer>
+        <span class="itemLeft">0 items left</span>
+        <div class="taskBar">
+          <button class="allTask"type=submit>All</button>
+          <button class="incompleteTask"type=button>Imcompleted</button>
+          <button class="completedTask"type=button>Completed</button>
+        </div>
+        <button class="button" id="clearButton">Clear all</button>
+
+
+
+      </footer>
+    </main>
+    <script src="scriptMVC.js"></script>
+  </body>
+</html>
