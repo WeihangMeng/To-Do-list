@@ -1,9 +1,3 @@
-//model
-const TABS = {
-  ALL: "ALL",
-  ACTIVE: "ACTIVE",
-  COMPLETED: "COMPLETED"
-}
 const model = {
   //todo {checkedd:boolen, value:string, id:string}
   todoList:{
@@ -11,7 +5,7 @@ const model = {
     activeTask: [],
     completedTask: []
   },
-  activeTab: TABS.ALL
+  activeTab: "ALL"
 }
 
 function createId() {
@@ -34,14 +28,10 @@ function addNewTask() {
   const value = getAddInputValue();
   const checked = false;
   const newId = createId();
-  const active = true;
-  const modify = false;
   const newTodo = {
     checked: checked,
     value: value,
-    id: newId,
-    active: active,
-    modify: modify
+    id: newId
   };
 
   model.todoList.allTask.push(newTodo);
@@ -53,12 +43,12 @@ function addNewTask() {
 }
 function updateCompletedTaskList(){
   model.todoList.completedTask = model.todoList.allTask.filter(function(todo){
-    return todo.active !== true;
+    return todo.checked;
   })
 }
 function updateActiveTaskList(){
   model.todoList.activeTask = model.todoList.allTask.filter(function(todo){
-    return todo.active === true;
+    return !todo.checked;
   })
 }
 function deleteAllTasks() {
@@ -82,13 +72,11 @@ function deleteTaskById(id) {
 function toggleTaskById(id) {
   const newList = model.todoList.allTask.map(function (todo) {
     if (todo.id === id) {
-      if (todo.checked === false){
+      if (!todo.checked){
         todo.checked = !todo.checked;
-        todo.active = !todo.active;
         return todo;
       }else{
         todo.checked = !todo.checked;
-        todo.active = !todo.active;
         return todo;
       }
     } else {
@@ -101,40 +89,38 @@ function toggleTaskById(id) {
   updateView(model.activeTab);
   taskLeft();
 }
+
 function checkAllTask(){
-  const checkedTask = model.todoList.allTask.filter(function(todo){
-    return todo.checked === true;
+  const nonCheckedTask = model.todoList.allTask.filter(function(todo){
+    return !todo.checked;
   });
-  const nonCheckedTask = model.todoList.allTask.filter(function(todo) {
-    return todo.checked === false;
-  });
-  if (nonCheckedTask.length != 0){
-    const checkedAllList = model.todoList.allTask.map(function (todo){
-    if (!todo.checked){
-      todo.checked = true;
-      todo.active = false;
-      return todo;
-    }else{
-      return todo;
+  if (nonCheckedTask.length  !== 0){
+    const checkedAll = model.todoList.allTask.map(function(todo){
+      if (!todo.checked){
+        todo.checked = true;
+        return todo;
+      }else{
+        return todo;
       }
-    });
-  model.todoList.allTask = checkedAllList;
-  updateCompletedTaskList();
-  updateActiveTaskList();
-  updateView(mdoel.activeTab);
-  taskLeft();
-  }else{
-    const checkedAllList = model.todoList.allTask.map(function (todo){
-      todo.checked = false;
-      todo.active = true;
-      return todo;
-    });
-    model.todoList.allTask = checkedAllList;
+      });
+    model.todoList.allTask = checkedAll;
+
     updateCompletedTaskList();
     updateActiveTaskList();
     updateView(model.activeTab);
     taskLeft();
-    }
+  }else{
+    const noncheckedAll = model.todoList.allTask.map(function(todo){
+      todo.checked = false;
+      return todo;
+    })
+    model.todoList.allTask = noncheckedAll;
+
+    updateCompletedTaskList();
+    updateActiveTaskList();
+    updateView(model.activeTab);
+    taskLeft();
+  }
 }
 function modifyTheTask(id){
   const listNodes = document.querySelectorAll("li");
@@ -144,7 +130,6 @@ function modifyTheTask(id){
       targetNode = listNodes[i];
     }
   }
-  // console.log(targetNode.childNodes);
   targetNode.childNodes[2].removeAttribute("type");
   targetNode.childNodes[2].value = targetNode.childNodes[1].innerHTML;
   targetNode.childNodes[1].style = "display:none";
@@ -181,7 +166,7 @@ function enterTheTask(id){
   })
 }
 function dispalyTheTask(activeTab){
-  updateList(activeTab);
+  updateView(activeTab);
 }
 // views
 
@@ -189,9 +174,9 @@ function getListContainer() {
   return document.querySelector(".list-container");
 }
 
-function createTaskNode(value, checked, id, active, modify) {
+function createTaskNode(value, checked, id) {
   const li = document.createElement("li");
-  if (active){
+  if (!checked){
     li.setAttribute("class", "active");
   }
   li.id = id;
@@ -238,7 +223,7 @@ function updateList(activeTab) {
   const todoList = getTodoList(activeTab);
   todoList.forEach(function (todo) {
     if (todo){
-      const liNode = createTaskNode(todo.value, todo.checked, todo.id, todo.active, todo.modify);
+      const liNode = createTaskNode(todo.value, todo.checked, todo.id);
       listContainer.appendChild(liNode);
     }
   });
@@ -306,7 +291,6 @@ function displayTask(e){
   if (target.classList.contains("allTask")){
     model.activeTab = "ALL";
     updateView(model.activeTab);
-    // dispalyAllTask();
   }
   if (target.classList.contains("incompleteTask")){
     model.activeTab = "ACTIVE";
@@ -321,6 +305,8 @@ function loadEvents() {
   model.todoList.allTask = JSON.parse(localStorage.getItem("allTask"));
   model.activeTab = localStorage.getItem("activeTab");
   updateView(model.activeTab);
+  updateCompletedTaskList();
+  updateActiveTaskList();
   const addButton = document.querySelector("#addButton");
   const clearAllButton = document.querySelector("#clearButton");
   const listContainer = getListContainer();
